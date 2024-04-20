@@ -10,15 +10,31 @@
     <div class="container">
         <h1>Test czasu reakcji</h1>
         <p>Zobaczysz pięć zgaszonych żarówek. Losowo jedna z nich się zaświeci. Twoim zadaniem będzie kliknąć na świecącą się żarówkę. Twój wynik pojawi się zaraz po zakończeniu testu.</p>
-        <div style="width: 75%; margin: auto; display: flex; flex-direction: column; gap: 1em;">
+        <div style="width: 75%; margin: auto; display: flex; flex-direction: column; gap: 1em; border: 1px solid black;">
             <div style="margin: auto;">Ilość testów: <input id="numberOfTests" type="range" min="1" max="5" value="3"></input></div>
+            <div style="margin: auto;">Rozmiar: 
+                <select id="selectSize" onchange="changeSize()">
+                    <option value="size0">mały – 30/30px</option>
+                    <option value="size1" selected>średni – 45/45px</option>
+                    <option value="size2">duży – 60/60px</option>
+                </select>
+            </div>
+            <div style="margin: auto;">Ułożenie: 
+                <select id="selectLayout" onchange="changeLayout()">
+                    <option value="layout0" selected>w piątkę jak na kostce</option>
+                    <option value="layout1">w przekątną lewą</option>
+                    <option value="layout2">w przekątną prawą</option>
+                    <option value="layout3">w linię poziomą na środku</option>
+                    <option value="layout4">w linię pionową na środku</option>
+                </select>
+            </div>
             <button id="startButton" style="margin: auto;" onclick="handleTests()">Rozpocznij test</button>
-            <div>
-            <img id="image0" src="assets/Lightbulb-Off.svg" width="100" height="100" style="margin: auto;">
-            <img id="image1" src="assets/Lightbulb-Off.svg" width="100" height="100" style="margin: auto;">
-            <img id="image2" src="assets/Lightbulb-Off.svg" width="100" height="100" style="margin: auto;">
-            <img id="image3" src="assets/Lightbulb-Off.svg" width="100" height="100" style="margin: auto;">
-            <img id="image4" src="assets/Lightbulb-Off.svg" width="100" height="100" style="margin: auto;">
+            <div id="images" class="layout0">
+                <img id="image0" src="assets/Lightbulb-Off.svg" class="size1">
+                <img id="image1" src="assets/Lightbulb-Off.svg" width="50" height="50">
+                <img id="image2" src="assets/Lightbulb-Off.svg" width="50" height="50">
+                <img id="image3" src="assets/Lightbulb-Off.svg" width="50" height="50">
+                <img id="image4" src="assets/Lightbulb-Off.svg" width="50" height="50">
             </div>
             <div id="currentResults"></div>
         </div>
@@ -100,17 +116,30 @@
             }
             var averageReactionTime = totalReactionTime / reactionTimes.length;
             var endTime = new Date();
-
-            // g. Wybrany dla testu układ rysunków - tutaj można dodać kod do uzyskania wybranego układu rysunków, jeśli jest to relevantne
-            // h. Wybrana dla testu wielkość rysunków - tutaj można dodać kod do uzyskania wybranej wielkości rysunków, jeśli jest to relevantne
+            var selectedLayout = document.getElementById("selectLayout").options[document.getElementById("selectLayout").selectedIndex].text;
+            var selectedSize = document.getElementById("selectSize").options[document.getElementById("selectSize").selectedIndex].text;
 
             document.getElementById("results").innerText += "Średni czas reakcji: " + averageReactionTime.toFixed(0) + " milisekund\n";
             document.getElementById("results").innerText += "Najkrótszy czas reakcji: " + shortestReactionTime + " milisekund\n";
             document.getElementById("results").innerText += "Najdłuższy czas reakcji: " + longestReactionTime + " milisekund\n";
             document.getElementById("results").innerText += "Łączny czas testu: " + totalReactionTime + " milisekund\n";
-            document.getElementById("results").innerText += "Godzina zakończenia testu: " + endTime.getHours() + ":" + endTime.getMinutes() + ":" + endTime.getSeconds() + "\n\n";
-
+            document.getElementById("results").innerText += "Godzina zakończenia testu: " + endTime.getHours() + ":" + endTime.getMinutes() + ":" + endTime.getSeconds() + "\n";
+            document.getElementById("results").innerText += "Wybrany układ rysunków: " + selectedLayout + "\n";
+            document.getElementById("results").innerText += "Wybrana wielkość rysunków: " + selectedSize + "\n";
             document.getElementById("startButton").style.display = "inline";
+        }
+
+        function changeLayout() {
+            var selectedLayout = document.getElementById("selectLayout").value;
+            document.getElementById("images").setAttribute("class", selectedLayout);
+        }
+
+        function changeSize() {
+            var selectedSize = document.getElementById("selectSize").value;
+            var images = document.querySelectorAll("#images img");
+            images.forEach(function(image) {
+                image.setAttribute("class", selectedSize);
+            });
         }
 
     </script>
